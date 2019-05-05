@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel = "stylesheet" type = "text/css" href = "main.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    </head>
+    <body>
+        <div v-cloak id="app">
+            <nav>
+                <div id="menu-btn" v-on:click="toggleSidebar()">☰</div>
+                <div id="clock">{{ clock }}</div>
+            </nav>
+            <div id="sidebar" v-bind:class="{ active: sidebar_active }">
+                <div id="close-btn-wrapper">
+                    <div>sware!@#$</div>
+                    <div id="close-btn" v-on:click="toggleSidebar()">X</div>
+                </div>
+                <ol>
+                    <li class="config-item" v-for="item in config_items">
+                        <div class="toggle">
+                            <div>{{ item.text }}</div>
+                            <input type="checkbox" v-bind:id="item.id" v-bind:checked="item.toggled" />
+                            <label v-bind:forHtml="item.id" v-on:click="toggleConfig(item.id)"></label>
+                        </div>
+                        <div id="manual-gps-wrapper" v-if="item.id === 'gpsLocation' && item.toggled">
+                            <input id="lat" type="text" required pattern="\d{2,3}\.\d{2}" v-model="config.manualLat" />
+                            <label id="lat-label" for="lat">Latitude, ie. 45.96</label>
+                            <input id="lon" type="text" required pattern="-\d{2,3}\.\d{2}" v-model="config.manualLon" />
+                            <label id="lon-label" for="lon">Longitude, ie. -100.23</label>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+            <content>
+                <div id="events-pane">
+                    <ol>
+                        <li class="event" v-for="event in displayEvents" v-on:click="showEventDetails(event)">
+                            <div v-bind:class="{ important: event.derived.is_important, badgeTor: event.derived.is_tor_related }">
+                                <div class="event-title">{{ event.title }}</div>
+                                <div class="event-subtitle">
+                                    <span>{{ event.derived.distance }}</span>
+                                </div>
+                            </div>
+                            <div class="time-ago">{{ event.derived.time_ago }}</div>
+                        </li>
+                    </ol>
+                </div>
+                <div id="details-pane">
+                    <div>{{ details_source }}</div>
+                    <div>{{ details_time }}</div>
+                    <pre>{{ details_text }}</pre>
+                </div>
+            </content>
+        </div>
+        <script src="vue.min.js"></script>
+        <script src="sigtor.min.js"></script>
+    </body>
+</html>
