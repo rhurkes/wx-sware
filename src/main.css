@@ -44,7 +44,7 @@ li.event {
     cursor: pointer;
 }
 
-li.event:hover {
+li.event:hover, .selected {
     background-color: rgb(50, 50, 50);
 }
 

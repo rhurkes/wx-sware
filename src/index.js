@@ -52,7 +52,7 @@ setInterval(() => {
     if (!manualConfig) {
         navigator.geolocation.getCurrentPosition(console.info, console.warn, geo_options);   
     }
-}, 10000);
+}, 60000);
 
 // Clock timer
 setInterval(() => {
@@ -127,7 +127,6 @@ const massageEvent = (event, current_location) => {
     // Conditional derivations
     if (current_location && event.location && event.location.point) {
         const distance = get_distance(current_location, event.location.point);
-        console.log(current_location);
         event.derived.distance = `${distance}mi`;   
     }
 
@@ -376,6 +375,8 @@ const app = new Vue({
     },
     methods: {
         showEventDetails: function(event) {
+            app.events.forEach(x => { x.derived.selected = false; } );
+            event.derived.selected = true;
             this.details_source = `Source: ${event.event_type}`; // TODO get source from eventtype
             this.details_text = event.text;
             this.details_time = `Time: ${event.derived.parsed_dt}`;

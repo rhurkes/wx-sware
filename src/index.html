@@ -36,7 +36,7 @@
             <content>
                 <div id="events-pane">
                     <ol>
-                        <li class="event" v-for="event in displayEvents" v-on:click="showEventDetails(event)">
+                        <li class="event" v-bind:class="{ selected: event.derived.selected }" v-for="event in displayEvents" v-on:click="showEventDetails(event)">
                             <div v-bind:class="{ important: event.derived.is_important, badgeTor: event.derived.is_tor_related }">
                                 <div class="event-title">{{ event.title }}</div>
                                 <div class="event-subtitle">
