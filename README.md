@@ -7,8 +7,7 @@
 ## Critical
 
 ## Backlog
-- use v-cloak to hide unrendered vue content
-- splash screen to ensure user interaction
+- keyboard controls and click outside the menu to close it
 - get WFO details including bounds
 - distance filter for afd
 - better UX for promoting first interaction on page, so speech synth will work

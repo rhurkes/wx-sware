@@ -17,6 +17,8 @@ button {
 
 * {
     box-sizing: border-box;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 /* end reset */
 
