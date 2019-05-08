@@ -494,8 +494,7 @@ const app = new Vue({
 const legalese = 'sware is not to be used while driving and shall not be used to guarantee one\'s safety.\n\nIt is alpha software - use at your own risk!';
 if (confirm(legalese)) {
     load_config();
-    // let url = `${api_base}/${last_ts}`;
-    let url = 'https://sigtor.org/v1/all';
+    let url = `${api_base}/${last_ts}`;
     fetchUrl(url);
 
     setInterval(() => {
