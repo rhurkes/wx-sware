@@ -130,6 +130,7 @@ const prepareEvent = (event) => {
     derived.is_important = get_importance(event);
     derived.is_tor_related = is_tor_related(event);
     derived.parsed_dt = parsed_dt;
+    derived.link = get_link(event);
 
     if (event.location && event.location.poly) {
         const bounds = poly_to_bounds(event.location.poly);
@@ -148,6 +149,37 @@ const prepareEvent = (event) => {
     event.derived = derived;
 
     return event;
+}
+
+const get_link = event => {
+    if (event.event_type === 'NwsSel') {
+        let id = `${event.watch.id}`;
+
+        if (id.length === 1) {
+            id = `000${id}`;
+        } else if (id.length === 2) {
+            id = `00${id}`;
+        } else if (id.length === 3) {
+            id = `0${id}`;
+        }
+        
+        return `https://www.spc.noaa.gov/products/watch/ww${id}.html`;
+    } else if (event.event_type === 'NwsSwo' && event.md) {
+        let id = `${event.md.id}`;
+        let year = (new Date(event.event_ts / 1000)).getUTCFullYear()
+
+        if (id.length === 1) {
+            id = `000${id}`;
+        } else if (id.length === 2) {
+            id = `00${id}`;
+        } else if (id.length === 3) {
+            id = `0${id}`;
+        }
+        
+        return `https://www.spc.noaa.gov/products/md/${year}/md${id}.html`;
+    }
+
+    return;
 }
 
 const filterEvent = (event, current_location) => {
@@ -354,6 +386,7 @@ const get_time_ago = (now, then) => {
     }
 }
 
+// TODO take places as 2nd param and update the decorate_text function
 const pad_zero = (input) => {
     if (!isNaN(input)) {
         const num = parseInt(input);
@@ -430,6 +463,7 @@ const app = new Vue({
         clock: get_clock(),
         details_source: '',
         details_text: '',
+        details_link: '',
         details_time: '',
         sidebar_active: false,
     },
@@ -439,6 +473,7 @@ const app = new Vue({
             event.derived.selected = true;
             this.details_source = `Source: ${event.event_type}`; // TODO get source from eventtype
             this.details_text = event.text;
+            this.details_link = event.derived.link;
             this.details_time = `Time: ${event.derived.parsed_dt}`;
         },
         toggleConfig: function(id) {
@@ -459,7 +494,8 @@ const app = new Vue({
 const legalese = 'sware is not to be used while driving and shall not be used to guarantee one\'s safety.\n\nIt is alpha software - use at your own risk!';
 if (confirm(legalese)) {
     load_config();
-    let url = `${api_base}/${last_ts}`;
+    // let url = `${api_base}/${last_ts}`;
+    let url = 'https://sigtor.org/v1/all';
     fetchUrl(url);
 
     setInterval(() => {

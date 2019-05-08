@@ -50,11 +50,13 @@
                 <div id="details-pane">
                     <div>{{ details_source }}</div>
                     <div>{{ details_time }}</div>
+                    <a v-if="details_link" target="_blank" v-bind:href="details_link">{{ details_link }}</a>
                     <pre>{{ details_text }}</pre>
                 </div>
             </content>
         </div>
         <script src="vue.min.js"></script>
         <script src="sigtor.min.js"></script>
+        <!-- <script src="index.js"></script> -->
     </body>
 </html>
