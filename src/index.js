@@ -472,6 +472,14 @@ const app = new Vue({
             app.events.forEach(x => { x.derived.selected = false; } );
             event.derived.selected = true;
             this.details_source = `Source: ${event.event_type}`; // TODO get source from eventtype
+            if (event.event_type === 'NwsAfd' && !event.text && event.ext_uri) {
+                fetch(event.ext_uri).then(x => x.json()).then(x => {
+                    if (x && x.productText) {
+                        event.text1 = x.productText;
+                        this.details_text = x.productText;
+                    }
+                });
+            }
             this.details_text = event.text;
             this.details_link = event.derived.link;
             this.details_time = `Time: ${event.derived.parsed_dt}`;
