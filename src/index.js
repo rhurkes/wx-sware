@@ -9,6 +9,7 @@ const ls_config_items_key = 'sware-config-items';
 const ls_config_key = 'sware-config';
 const sev_hail_threshold = 2.0;
 const tor_related_hazards = ['Tornado', 'WallCloud', 'Funnel'];
+const filterableSources = ['NwsAfd', 'NwsFfw', 'NwsFlw', 'NwsLsr', 'NwsSvr', 'NwsTor', 'SnReport'];
 
 // Alert blurbs
 const tor_emergency_blurb = "The National Weather Service has issued a Tornado Emergency.";
@@ -186,7 +187,7 @@ const filterEvent = (event, current_location) => {
     // Distance filter
     const is_chase_mode = app.config_items.find(x => x.id === 'chaseMode').toggled;
 
-    if (is_chase_mode) {
+    if (is_chase_mode && filterableSources.indexOf(event.event_type) > -1) {
         if (event.location && event.location.point) {
             const distance = get_distance(current_location, event.location.point);
             if (distance > chase_mode_distance_miles) {
@@ -258,9 +259,8 @@ const buildAlertForEvent = (event) => {
         if (event.report.hazard === 'Tornado') {
             alert = tor_blurb.replace('$REPORTER', event.report.reporter)
             // SN won't have this, but LSRs will
-            if (event.location.county) {
-                alert = alert.replace('$PLACE', `for ${event.location.county} county.`);
-            }
+            const place = event.location.county ? `for ${event.location.county} county.` : '';
+            alert = alert.replace('$PLACE', place);
             if (event.report.is_tor_emergency) {
                 alert += tor_emergency_blurb;
             }
